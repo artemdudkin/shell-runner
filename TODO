@@ -1,0 +1,2 @@
+hide "start" button if proc already started
+sync time (client-server)
