@@ -1,7 +1,7 @@
 const fn = "../data/data.json";
 const alias = {
   "a"      : "../data/a",
-  "ls"     : "ls -l ../data/"
+  "ls"     : "ls -l ../data/",
   "deploy" : "../data/deploy gtd",
 }
 
