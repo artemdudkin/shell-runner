@@ -1,0 +1,13 @@
+{
+  "safvasdvasv": [
+    {
+      "d": "2017-11-07T21:06:47.566Z",
+      "t": "start"
+    },
+    {
+      "d": "2017-11-07T21:06:47.595Z",
+      "t": "error",
+      "data": "Error: spawn safvasdvasv ENOENT"
+    }
+  ]
+}

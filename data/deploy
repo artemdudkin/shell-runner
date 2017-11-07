@@ -1,0 +1,37 @@
+#!/bin/bash
+
+command=$1
+
+if [ "$command" == "gtd" ]; then
+	echo "Deploy '$command', cloning..."
+
+	rm -rf ~/_deploy/gtd
+	mkdir -p ~/_deploy/
+	cd ~/_deploy/
+	if git clone git@github.com:artemdudkin/gtd.git gtd; then
+		cd gtd/
+
+		echo "Clone ok, installing libs..."
+
+		npm i
+
+		echo "Libs ok, building..."
+
+		if npm run prod; then
+			echo "Build ok, deploying..."
+			rm -rf /srv/node-www/task-stat/index.html
+			rm -rf /srv/node-www/task-stat/dist
+
+			cp -R ./dist /srv/node-www/task-stat
+			cp ./index.html /srv/node-www/task-stat
+			echo "Deploy ok"
+			echo "FINISHED OK"
+		else
+			echo "Build failed"
+		fi
+	else
+		echo "Cloning failed"
+	fi
+else
+	echo "Cannot find '$command' config"
+fi

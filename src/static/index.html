@@ -1,0 +1,71 @@
+<script>
+var COMMAND = "deploy";
+
+/**
+* jQuery-like ajax (only POST, only application/json, no cross-domain?) IE9+
+*
+*  url
+*  data                        == json to send (not stringified)
+*  success(responseText, data) == success callback, where data is parsed json fron responseText
+*  fail(status, statusText)    == fail callback
+**/
+function post( url, data, success, fail){
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', encodeURI(url));
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.onreadystatechange = function() {
+		if (this.readyState != 4) return;
+		if (xhr.status === 200) {
+			var data; try { data = JSON.parse(xhr.responseText); } catch (e) {}
+			if (success) success(xhr.responseText, data);
+		} else { //if (xhr.status !== 200)
+			if (fail) fail(xhr.status, xhr.statusText);
+		}
+	};
+	xhr.send(JSON.stringify(data));
+}
+
+function $(str_selector){
+  return document.querySelectorAll(str_selector);
+}
+
+function status_success(responseText, data){
+  var s = "";
+  if (data && data.data) {
+    for (var i in data.data) {
+      const d = data.data[i];
+			const text = d && d.data ? ("" + d.data).trim() : "";
+      s = s + (s?"<br>":"") + d.d + " " + d.t + " " + text.replace(/(\r\n|\n|\r)$/gm,"").replace(/(?:\r\n|\r|\n)/gm, '<br/>')
+    }
+  }
+  $('#status')[0].innerHTML = s;
+}
+
+setInterval(function(){
+  post(
+    './status',
+    {command:COMMAND},
+    status_success,
+    function status_fail(status, statusText){
+      $('#status')[0].innerHTML = "error " + status + " " + statusText;
+    }
+  )
+}, 1000);
+
+function start(){
+  post(
+    './start',
+    {command:COMMAND},
+    function start_success(responseText, data){
+      $('#status')[0].innerHTML = "start ok";
+    },
+    function start_fail(status, statusText){
+      $('#status')[0].innerHTML = "start failed";
+    }
+  )
+}
+
+</script>
+
+<div id="status"></div>
+<button onclick="start()">Start</button>
