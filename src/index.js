@@ -21,6 +21,8 @@ app.use(serveStatic('./static'));
 //json dynamic data
 app.use(bodyParser.json())
     .use(function(req, res, next) {
+	res.connection.setTimeout(0); //remove timeout for long request (such as  build scripts)
+	
         console.log("\n\n" + req.method.toUpperCase() + " " + req.url + "  " + JSON.stringify(req.body));
         console.log("cookies:", req.headers.cookie);
 
